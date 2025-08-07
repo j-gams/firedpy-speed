@@ -15,7 +15,7 @@ def auto_density_func(density_param, shape):
 
     return max_bins
 
-def computefirespeed(fire_gdf):
+def computefirespeed(fire_gdf, test_subset=float("inf")):
     transformer = pyproj.Transformer.from_crs(fire_gdf.crs, "EPSG:4326", always_xy=True)
     geod = pyproj.Geod(ellps="WGS84")
     orig_x = [np.nan]
@@ -27,7 +27,7 @@ def computefirespeed(fire_gdf):
     prev_step = [fire_gdf.iloc[0]["geometry"].geoms[ii].simplify(0.05).exterior.coords for ii in range(len(fire_gdf.iloc[0]["geometry"].geoms))]
     ### need to deal with resampling or something here in future iteration of code
     ### iterate over time steps
-    for i in range(1, min(fire_gdf.shape[0], 10)):
+    for i in range(1, min(fire_gdf.shape[0], test_subset)):
         ### setup for overlap and spot checks...
         inter_matrix = np.zeros((len(fire_gdf.iloc[i-1]["geometry"].geoms), len(fire_gdf.iloc[i]["geometry"].geoms)))
         for ii in range(inter_matrix.shape[0]):
