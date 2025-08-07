@@ -18,12 +18,14 @@ def auto_density_func(density_param, shape):
 def computefirespeed(fire_gdf, test_subset=float("inf")):
     transformer = pyproj.Transformer.from_crs(fire_gdf.crs, "EPSG:4326", always_xy=True)
     geod = pyproj.Geod(ellps="WGS84")
-    orig_x = [np.nan]
-    orig_y = [np.nan]
-    dest_x = [np.nan]
-    dest_y = [np.nan]
-    result_max_dist = [np.nan]
-    result_speed = [np.nan]
+    orig_x = [np.nan for iii in range((min(fire_gdf.shape[0], 1)))]
+    orig_y = [np.nan for iii in range((min(fire_gdf.shape[0], 1)))]
+    dest_x = [np.nan for iii in range((min(fire_gdf.shape[0], 1)))]
+    dest_y = [np.nan for iii in range((min(fire_gdf.shape[0], 1)))]
+    result_max_dist = [np.nan for iii in range((min(fire_gdf.shape[0], 1)))]
+    result_speed = [np.nan for iii in range((min(fire_gdf.shape[0], 1)))]
+    if len(fire_gdf) == 0:
+        return orig_x, orig_y, dest_x, dest_y, result_max_dist, result_speed
     prev_step = [fire_gdf.iloc[0]["geometry"].geoms[ii].simplify(0.05).exterior.coords for ii in range(len(fire_gdf.iloc[0]["geometry"].geoms))]
     ### need to deal with resampling or something here in future iteration of code
     ### iterate over time steps
